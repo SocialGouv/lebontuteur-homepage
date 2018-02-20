@@ -3,6 +3,7 @@
   color: #fff;
   background: #45adc5;
   background: linear-gradient(to right, #c969a6 0%, #e795a8 15%, #a4cfcd 43%, #45adc5 65%, #265c9f 100%);
+  background-image: url('images/background_1.jpg');
 }
 
 .hero__container {
@@ -18,6 +19,8 @@
 .hero__white-background {
   padding: 10px 1em;
   background-color: white;
+  color: #003189;
+  border-radius: 25px;
 }
 
 .hero h1 {

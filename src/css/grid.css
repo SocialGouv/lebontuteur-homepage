@@ -9,6 +9,11 @@
 .row .column {
   margin: 0 2em;
   max-width: 50em;
+
+}
+
+.col_img{
+  border-radius: 50%;
 }
 
 @media (--smaller-than-tablet) {
