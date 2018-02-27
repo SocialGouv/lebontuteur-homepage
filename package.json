@@ -25,7 +25,9 @@
     "dist-site": "copyfiles images/* images/**/* fonts/**/* index.html dist"
   },
   "main": "postcss.config.js",
-  "dependencies": {},
+  "dependencies": {
+    "yarn": "^1.5.1"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/etalab/template.data.gouv.fr.git"
