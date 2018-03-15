@@ -175,6 +175,17 @@ button.button:active {
   margin-bottom: 2px;
 }
 
+.button_orange{
+  background-color: orange !important;
+}
+
+.button_transparent{
+  background-color: transparent !important;
+  border: 1px !important;
+  border-color: white;
+
+}
+
 .container {
   position: relative;
   width: 100%;
@@ -343,9 +354,7 @@ button.button:active {
   width: 100%;
   color: #fff;
   background: #45adc5;
-  background: -webkit-gradient(linear, left top, right top, from(#c969a6), color-stop(15%, #e795a8), color-stop(43%, #a4cfcd), color-stop(65%, #45adc5), to(#265c9f));
-  background: linear-gradient(to right, #c969a6 0%, #e795a8 15%, #a4cfcd 43%, #45adc5 65%, #265c9f 100%);
-  background-image: url('images/background_1.jpg');
+
 }
 
 .hero__container {
@@ -370,7 +379,7 @@ button.button:active {
 
 .hero__white-background {
   padding: 10px 1em;
-  background-color: white;
+  background-color: transparent;
   color: #003189;
   border-radius: 25px;
 }
@@ -524,10 +533,6 @@ button.button:active {
   margin: 0 2em;
   max-width: 50em;
 
-}
-
-.col_img{
-  border-radius: 50%;
 }
 
 @media (max-width: 749px) {

@@ -12,9 +12,6 @@
 
 }
 
-.col_img{
-  border-radius: 50%;
-}
 
 @media (--smaller-than-tablet) {
   .row {

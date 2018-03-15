@@ -32,3 +32,13 @@ button.button:active {
   border-bottom: 0;
   margin-bottom: 2px;
 }
+
+.button_orange{
+  background-color: orange !important;
+}
+.button_transparent{
+  background-color: transparent !important;
+  border: 1px !important;
+  border-color: white;
+
+}
