@@ -1,119 +1,66 @@
 version: 2
-
-defaults:
-  workspace_root: &workspace_root
-    ~/templatedatagouv
-
-  container: &default_container
-    working_directory: *workspace_root
-    docker:
-      - image: circleci/node:8
-
-  attach_workspace: &attach_workspace
-    attach_workspace:
-      at: *workspace_root
-
-  restore_node_modules: &restore_node_modules
-    restore_cache:
-      name: Restore node_modules cache
-      keys:
-        - v1-templatedatagouv-node-{{ checksum "yarn.lock" }}
-        - v1-templatedatagouv-node-
-
 jobs:
-  install:
-    <<: *default_container
+  build:
+    branches:
+      only:
+        - master
+    docker:
+      - image: circleci/node:10
+    working_directory: ~/repo
     steps:
       - checkout
-
       - restore_cache:
-          name: Restore yarn cache
           keys:
-            - v1-templatedatagouv-yarn-{{ checksum "yarn.lock" }}
-            - v1-templatedatagouv-yarn-
-
-      - *restore_node_modules
-
+            - dependencies-{{ checksum "package-lock.json" }}
+            - dependencies-
       - run:
           name: Install dependencies
-          command: yarn
-
+          command: NODE_ENV=development npm install
       - save_cache:
-          name: Save yarn cache
-          key: v1-templatedatagouv-yarn-{{ checksum "yarn.lock" }}
           paths:
-            - ~/.cache/yarn/
-
-      - save_cache:
-          name: Save node_modules cache
-          key: v1-templatedatagouv-node-{{ checksum "yarn.lock" }}
-          paths:
-            - node_modules/
-
-      - run:
-          name: Remove node_modules to cleanup workspace
-          command: rm -r node_modules/
-
-      - persist_to_workspace:
-          root: *workspace_root
-          paths:
-            - ./
-
-  build:
-    <<: *default_container
-    steps:
-      - *attach_workspace
-      - *restore_node_modules
-
-      - run:
-          name: Build output bundles
-          command: yarn dist
-
-      - persist_to_workspace:
-          root: *workspace_root
-          paths:
-            - dist/
-
-  deploy:
-    <<: *default_container
-    steps:
-      - *attach_workspace
-      - *restore_node_modules
-
-      - add_ssh_keys:
-          fingerprints:
-            - 63:c6:b8:d7:85:98:4c:0b:f4:1b:dd:ed:57:dc:d8:95
-
-      - run:
-          name: Setup SSH to GitHub
-          command: mkdir ~/.ssh && ssh-keyscan github.com >> ~/.ssh/known_hosts
-
-      - run:
-          name: Set SSH user email
-          command: git config --global user.email "infra@data.gouv.fr"
-
-      - run:
-          name: Set SSH user name
-          command: git config --global user.name "CircleCI"
-
+            - node_modules
+          key: dependencies-{{ checksum "package-lock.json" }}
       - deploy:
-          name: Deploy to gh-pages branch on GitHub
+          name: Deploy
           command: |
-            if [ "${CIRCLE_BRANCH}" == "master" ]; then
-              yarn deploy
-            fi
+              set -e
 
-workflows:
-  version: 2
+              CI="" NODE_ENV=production npm run dist
 
-  build_test_deploy:
-    jobs:
-      - install
+              SITE_SOURCE="dist"
+              DEST_BRANCH="gh-pages"
 
-      - build:
-          requires:
-            - install
+              remote=$(git config remote.origin.url)
 
-      - deploy:
-          requires:
-            - build
+              if [ ! -d "$SITE_SOURCE" ]
+              then
+                  echo "Usage: $0 <site source dir>"
+                  exit 1
+              fi
+
+              mkdir "${DEST_BRANCH}-branch"
+              cd "${DEST_BRANCH}-branch"
+              git config --global user.email "$GH_EMAIL" > /dev/null 2>&1
+              git config --global user.name "$GH_NAME" > /dev/null 2>&1
+              git init
+              git remote add origin "$remote"
+
+              if git rev-parse --verify "origin/${DEST_BRANCH}" > /dev/null 2>&1
+              then
+                  git checkout $DEST_BRANCH
+                  git rm -rf .
+              else
+                  git checkout --orphan $DEST_BRANCH
+              fi
+
+              cp -a "../${SITE_SOURCE}/." .
+              touch .nojekyll
+
+              git add -A
+              git commit --allow-empty -m "Deploy to GitHub pages [ci skip]"
+              git push --force --quiet origin $DEST_BRANCH > /dev/null 2>&1
+
+              cd ..
+              rm -rf "${DEST_BRANCH}-branch"
+
+              echo "Finished Deployment!"
