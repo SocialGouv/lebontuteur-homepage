@@ -39,7 +39,7 @@
   <link rel="icon" type="image/png" sizes="32x32" href="images/favicons/favicon-32x32.png">
   <link rel="manifest" href="images/favicons/manifest.json">
   <link rel="mask-icon" href="images/favicons/safari-pinned-tab.svg" color="#5bbad5">
-  
+
   <!-- Piwik -->
   <script type="text/javascript">
     var _paq = _paq || [];
@@ -63,15 +63,20 @@
 
 <body>
   <nav class="nav">
-    <div class="nav__container" style="margin-left: 40%">
-      <a class="nav__link" href="index.html">
-        <img class="nav__logo" src="images/emjpm.png" alt="Accueil de LeBonTuteur.beta.gouv.fr" />
-
-      </a>
-      <a href="https://emjpm.num.social.gouv.fr" style="padding-right: 10px">Se connecter</a>
-
+    <div class="nav__container" style="text-align: center;display: flex;flex-direction: row;padding:10px 0">
+      <div style="flex: 0 0 300px"></div>
+      <div style="flex: 1 0 auto">
+        <a class="nav__link" href="index.html">
+          <img style="max-height:50px" class="nav__logo" src="images/emjpm.png" alt="Accueil de LeBonTuteur.beta.gouv.fr" />
+        </a>
+      </div>
+      <div style="flex: 0 0 300px;text-align: right; padding-right: 10px">
+        <a href="https://emjpm-doc.num.social.gouv.fr" style="padding-right: 10px">Assistance</a>
+        <a href="https://emjpm.num.social.gouv.fr" style="padding-right: 10px">Se connecter</a>
+      </div>
     </div>
   </nav>
+
 
   <div class="hero" style="background-size: cover; background-position: bottom center;heigth: 100px !important; background-image: url('images/background_12.jpg');">
     <div class="hero__container">
